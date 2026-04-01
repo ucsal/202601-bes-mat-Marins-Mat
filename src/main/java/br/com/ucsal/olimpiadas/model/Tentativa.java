@@ -1,4 +1,4 @@
-package br.com.ucsal.olimpiadas;
+package br.com.ucsal.olimpiadas.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,20 @@ public class Tentativa {
 	private long participanteId;
 	private long provaId;
 
-	private final List<Resposta> respostas = new ArrayList<>();
+	private final List<Resposta> respostas;
+
+    public Tentativa() {
+        respostas = new ArrayList<>();
+    }
+
+    public int calcularNota() {
+        int acertos = 0;
+        for (var r : respostas) {
+            if (r.isCorreta())
+                acertos++;
+        }
+        return acertos;
+    }
 
 	public long getId() {
 		return id;
@@ -38,4 +51,7 @@ public class Tentativa {
 		return respostas;
 	}
 
+    /*public RespostaRepository getRespostaRepository() {
+        return respostaRepository;
+    }*/
 }

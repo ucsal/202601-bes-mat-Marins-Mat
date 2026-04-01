@@ -1,11 +1,11 @@
-package br.com.ucsal.olimpiadas;
+package br.com.ucsal.olimpiadas.model;
 
 public class Prova {
 
 	private long id;
 	private String titulo;
 
-	public long getId() {
+    public long getId() {
 		return id;
 	}
 
