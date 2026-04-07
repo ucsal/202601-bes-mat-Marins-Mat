@@ -26,6 +26,6 @@ public class ProvaRepository {
     }
 
     public Prova findById(Long id) {
-        return provas.stream().filter(p -> p.getId()==id).findFirst().orElseThrow(() -> new IllegalArgumentException("Prova não encontrada"));
+        return provas.stream().filter(p -> p.getId()==id).findFirst().orElse(null);
     }
 }

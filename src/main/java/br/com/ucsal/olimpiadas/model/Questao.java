@@ -11,17 +11,31 @@ public class Questao {
 	private String[] alternativas = new String[5];
 	private char alternativaCorreta;
     private int questaoNaProva;
+    private TipoQuestao tipoQuestao;
+    private Materia materia;
 
-    private String fenInicial;
+    public TipoQuestao getTipoQuestao() {
+        return tipoQuestao;
+    }
 
-	public boolean isRespostaCorreta(char marcada) {
+    public void setTipoQuestao(TipoQuestao tipoQuestao) {
+        this.tipoQuestao = tipoQuestao;
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
+    }
+
+    public boolean isRespostaCorreta(char marcada) {
         try {
             return normalizar(marcada) == alternativaCorreta;
         } catch (Exception e) {
             return false;
         }
-
-
 	}
 
 	public static char normalizar(char c) {
@@ -31,15 +45,6 @@ public class Questao {
 		}
 		return up;
 	}
-
-
-    public String getFenInicial() {
-        return fenInicial;
-    }
-
-    public void setFenInicial(String fenInicial) {
-        this.fenInicial = fenInicial;
-    }
 
     public long getId() {
         return id;

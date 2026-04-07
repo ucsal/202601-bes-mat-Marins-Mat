@@ -23,4 +23,8 @@ public class ParticipanteRepository {
     public List<Participante> getParticipantes() {
         return participantes;
     }
+
+    public Participante findById(Long id) {
+        return participantes.stream().filter(p -> p.getId()==id).findFirst().orElse(null);
+    }
 }

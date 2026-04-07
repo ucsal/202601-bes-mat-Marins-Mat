@@ -49,5 +49,8 @@ public class ParticipanteService {
         return participanteRepository.getParticipantes().isEmpty();
     }
 
+    public boolean anyMatch(Long id) {
+        return participanteRepository.findById(id)!=null;
+    }
 
 }

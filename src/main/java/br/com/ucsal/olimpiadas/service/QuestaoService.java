@@ -1,7 +1,6 @@
 package br.com.ucsal.olimpiadas.service;
 
-import br.com.ucsal.olimpiadas.model.Prova;
-import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.*;
 import br.com.ucsal.olimpiadas.repositories.ProvaRepository;
 import br.com.ucsal.olimpiadas.repositories.QuestaoRepository;
 
@@ -18,12 +17,27 @@ public class QuestaoService {
         this.provaRepository = provaRepository;
     }
 
-    public void cadastrarQuestao(Long provaID, String enunciado, String [] alternativas, char correta) {
+    public void cadastrarQuestao(Long provaID, String enunciado, String [] alternativas, char correta, TipoQuestao tipo, Materia materia) {
 
         Prova prova = provaRepository.findById(provaID);
 
         var questao = new Questao();
         questao.setQuestaoNaProva(findByProvaId(provaID).size()+1);
+        questao.setProvaId(prova.getId());
+        questao.setEnunciado(enunciado);
+        questao.setAlternativas(alternativas);
+        questao.setAlternativaCorreta(correta);
+
+        questaoRepository.add(questao);
+    }
+
+    public void cadastrarQuestao(Long provaID, String fenInicial, String enunciado, String [] alternativas, char correta, TipoQuestao tipo, Materia materia) {
+
+        Prova prova = provaRepository.findById(provaID);
+
+        var questao = new QuestaoXadrez();
+        questao.setQuestaoNaProva(findByProvaId(provaID).size()+1);
+        questao.setFenInicial(fenInicial);
         questao.setProvaId(prova.getId());
         questao.setEnunciado(enunciado);
         questao.setAlternativas(alternativas);
