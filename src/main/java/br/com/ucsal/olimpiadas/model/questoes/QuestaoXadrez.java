@@ -1,6 +1,6 @@
-package br.com.ucsal.olimpiadas.model;
+package br.com.ucsal.olimpiadas.model.questoes;
 
-public class QuestaoXadrez extends Questao{
+public class QuestaoXadrez extends QuestaoMultiEscolha{
 
     private String fenInicial;
 

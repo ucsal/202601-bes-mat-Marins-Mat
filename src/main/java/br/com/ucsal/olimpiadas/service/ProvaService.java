@@ -2,13 +2,10 @@ package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.Materia;
 import br.com.ucsal.olimpiadas.model.Prova;
-import br.com.ucsal.olimpiadas.model.Questao;
 import br.com.ucsal.olimpiadas.model.TipoQuestao;
 import br.com.ucsal.olimpiadas.repositories.ProvaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProvaService {
 
@@ -19,7 +16,7 @@ public class ProvaService {
         this.provaRepository = provaRepository;
     }
 
-    public void cadastrarProva(String titulo, List<TipoQuestao> tipos, List<Materia> materias) {
+    public Prova cadastrarProva(String titulo, List<TipoQuestao> tipos, List<Materia> materias) {
 
         if (titulo == null || titulo.isBlank())
             throw new IllegalArgumentException("Titulo Inválido");
@@ -36,6 +33,8 @@ public class ProvaService {
         prova.setTiposDeQuestao(tipos);
         prova.setMaterias(materias);
         provaRepository.add(prova);
+
+        return prova;
     }
 
     public Prova findProvaById(Long id) {

@@ -38,8 +38,8 @@ public class App {
     private static final AplicadorProva aplicadorProva = new AplicadorProva(provaUI, participanteUI, questaoUI, tentativaService);
     private static final Menu menu = new Menu(participanteUI, provaUI, questaoUI, aplicadorProva, tentativaUI);
 
-    void main(String[] args) {
-		seed();
+    static void main(String[] args) {
+		DataSeeder.seed(participanteService, provaService, questaoService, tipoQuestaoRepository, materiaRepository);
 
 		while (true) {
 
@@ -55,8 +55,6 @@ public class App {
 
             var opcaoId = Long.parseLong(in.nextLine());
 
-            participanteUI.verificarExistenciaDeParticipantes();
-
             if (opcaoId == 0) {
                 System.out.println("tchau");
                 return;
@@ -67,69 +65,4 @@ public class App {
             }
 		}
 	}
-
-    void seed() {
-
-        participanteService.cadastrarParticipante("Mateus", "");
-
-        List<TipoQuestao> tipos = tipoQuestaoRepository.getTiposDeQuestao();
-
-        List<Materia> materias = materiaRepository.getMaterias();
-
-		provaService.cadastrarProva("Olimpíada 2026 • Nível 1 • Prova A", tipos, Arrays.asList(materias.getFirst()));
-
-        provaService.cadastrarProva("Prova teste", tipos, Arrays.asList(materias.getLast()));
-
-        Prova primeiraProva = provaService.findProvaById(1L);
-
-		String enunciado = ("""
-				Questão 1 — Mate em 1.
-				É a vez das brancas.
-				Encontre o lance que dá mate imediatamente.
-				""");
-
-		String FenInicial = ("6k1/5ppp/8/8/8/7Q/6PP/6K1 w - - 0 1");
-
-        String[] Alternativas = new String[] { "A) Qh7#", "B) Qf5#", "C) Qc8#", "D) Qh8#", "E) Qe6#" };
-
-		char AlternativaCorreta = ('C');
-
-		questaoService.cadastrarQuestao(primeiraProva.getId(), FenInicial, enunciado, Alternativas, AlternativaCorreta, tipos.getFirst(), materias.getFirst());
-
-        primeiraProva = provaService.findProvaById(2L);
-
-        enunciado = ("""
-				Questão 1 — A""");
-
-
-
-        Alternativas = new String[] { "A) a", "B) b", "C) c", "D) d", "E) e" };
-
-        AlternativaCorreta = ('a');
-
-        questaoService.cadastrarQuestao(primeiraProva.getId(), enunciado, Alternativas, AlternativaCorreta, tipos.getLast(), materias.getLast());
-
-        enunciado = ("""
-				Questão 2 — B""");
-
-
-
-        Alternativas = new String[] { "A) a", "B) b", "C) c", "D) d", "E) e" };
-
-        AlternativaCorreta = ('b');
-
-        questaoService.cadastrarQuestao(primeiraProva.getId(), enunciado, Alternativas, AlternativaCorreta, tipos.getLast(), materias.getLast());
-        enunciado = ("""
-				Questão 2 — B""");
-
-
-
-        Alternativas = new String[] { "A) a", "B) b", "C) c", "D) d", "E) e" };
-
-        AlternativaCorreta = ('c');
-
-        questaoService.cadastrarQuestao(primeiraProva.getId(), enunciado, Alternativas, AlternativaCorreta, tipos.getLast(), materias.getLast());
-    }
-
-
 }

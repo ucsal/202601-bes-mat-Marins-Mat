@@ -1,6 +1,6 @@
 package br.com.ucsal.olimpiadas.repositories;
 
-import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.questoes.Questao;
 
 import java.util.ArrayList;
 import java.util.List;

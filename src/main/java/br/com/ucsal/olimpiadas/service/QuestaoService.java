@@ -1,6 +1,10 @@
 package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.*;
+import br.com.ucsal.olimpiadas.model.questoes.Questao;
+import br.com.ucsal.olimpiadas.model.questoes.QuestaoMultiEscolha;
+import br.com.ucsal.olimpiadas.model.questoes.QuestaoVerdadeiroOuFalso;
+import br.com.ucsal.olimpiadas.model.questoes.QuestaoXadrez;
 import br.com.ucsal.olimpiadas.repositories.ProvaRepository;
 import br.com.ucsal.olimpiadas.repositories.QuestaoRepository;
 
@@ -21,7 +25,14 @@ public class QuestaoService {
 
         Prova prova = provaRepository.findById(provaID);
 
-        var questao = new Questao();
+        Questao questao;
+
+        if (tipo.getId().equals(2)) {
+            questao = new QuestaoVerdadeiroOuFalso();
+        } else {
+            questao = new QuestaoMultiEscolha();
+        }
+
         questao.setQuestaoNaProva(findByProvaId(provaID).size()+1);
         questao.setProvaId(prova.getId());
         questao.setEnunciado(enunciado);
@@ -46,9 +57,9 @@ public class QuestaoService {
         questaoRepository.add(questao);
     }
 
-    public Character validarAlternativa(char alt){
+    public Character validarAlternativa(Questao q, char alt){
 
-        return (Character) Questao.normalizar(alt);
+        return (Character) q.normalizar(alt);
 
     }
 

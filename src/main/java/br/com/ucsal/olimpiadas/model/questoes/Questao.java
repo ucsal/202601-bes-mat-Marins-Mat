@@ -1,34 +1,21 @@
-package br.com.ucsal.olimpiadas.model;
+package br.com.ucsal.olimpiadas.model.questoes;
+
+import br.com.ucsal.olimpiadas.model.Materia;
+import br.com.ucsal.olimpiadas.model.TipoQuestao;
 
 import java.util.Arrays;
 
-public class Questao {
+public abstract class  Questao {
 
 	private long id;
 	private long provaId;
 
 	private String enunciado;
-	private String[] alternativas = new String[5];
+	private String[] alternativas;
 	private char alternativaCorreta;
     private int questaoNaProva;
     private TipoQuestao tipoQuestao;
     private Materia materia;
-
-    public TipoQuestao getTipoQuestao() {
-        return tipoQuestao;
-    }
-
-    public void setTipoQuestao(TipoQuestao tipoQuestao) {
-        this.tipoQuestao = tipoQuestao;
-    }
-
-    public Materia getMateria() {
-        return materia;
-    }
-
-    public void setMateria(Materia materia) {
-        this.materia = materia;
-    }
 
     public boolean isRespostaCorreta(char marcada) {
         try {
@@ -38,13 +25,7 @@ public class Questao {
         }
 	}
 
-	public static char normalizar(char c) {
-		char up = Character.toUpperCase(c);
-		if (up < 'A' || up > 'E') {
-			throw new IllegalArgumentException("Alternativa deve estar entre A e E.");
-		}
-		return up;
-	}
+	public abstract char normalizar(char c);
 
     public long getId() {
         return id;
@@ -97,4 +78,19 @@ public class Questao {
         this.questaoNaProva = questaoNaProva;
     }
 
+    public TipoQuestao getTipoQuestao() {
+        return tipoQuestao;
+    }
+
+    public void setTipoQuestao(TipoQuestao tipoQuestao) {
+        this.tipoQuestao = tipoQuestao;
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
+    }
 }

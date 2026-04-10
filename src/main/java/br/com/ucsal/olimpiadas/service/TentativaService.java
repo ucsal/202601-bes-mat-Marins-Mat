@@ -1,6 +1,6 @@
 package br.com.ucsal.olimpiadas.service;
 
-import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.questoes.Questao;
 import br.com.ucsal.olimpiadas.model.Resposta;
 import br.com.ucsal.olimpiadas.model.Tentativa;
 import br.com.ucsal.olimpiadas.repositories.TentativaRepository;

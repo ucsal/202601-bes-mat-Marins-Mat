@@ -1,6 +1,6 @@
 package br.com.ucsal.olimpiadas.UI;
 
-import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.questoes.Questao;
 import br.com.ucsal.olimpiadas.service.TentativaService;
 
 import java.util.List;
