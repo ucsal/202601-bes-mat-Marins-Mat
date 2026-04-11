@@ -1,41 +1,22 @@
 package br.com.ucsal.olimpiadas.model.questoes;
 
-public class QuestaoXadrez extends QuestaoMultiEscolha{
+import br.com.ucsal.olimpiadas.ChessboardRenderer;
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
+
+public class QuestaoXadrez extends Questao{
 
     private String fenInicial;
 
-    static void imprimirTabuleiroFen(String fen) {
+    public QuestaoXadrez(long id, long provaId, String enunciado, String[] alternativas,char alternativaCorreta, int questaoNaProva, TipoQuestao tipoQuestao, Materia materia, String fenInicial) {
+        super(id, provaId, enunciado, alternativas, alternativaCorreta, questaoNaProva, tipoQuestao, materia);
+        this.fenInicial = fenInicial;
+    }
 
-        String parteTabuleiro = fen.split(" ")[0];
-        String[] ranks = parteTabuleiro.split("/");
 
-        System.out.println();
-        System.out.println("    a b c d e f g h");
-        System.out.println("   -----------------");
-
-        for (int r = 0; r < 8; r++) {
-
-            String rank = ranks[r];
-            System.out.print((8 - r) + " | ");
-
-            for (char c : rank.toCharArray()) {
-
-                if (Character.isDigit(c)) {
-                    int vazios = c - '0';
-                    for (int i = 0; i < vazios; i++) {
-                        System.out.print(". ");
-                    }
-                } else {
-                    System.out.print(c + " ");
-                }
-            }
-
-            System.out.println("| " + (8 - r));
-        }
-
-        System.out.println("   -----------------");
-        System.out.println("    a b c d e f g h");
-        System.out.println();
+    @Override
+    public void exibirMaisDetalhes() {
+        ChessboardRenderer.imprimirTabuleiroFen(this.fenInicial);
     }
 
     public String getFenInicial() {
@@ -44,11 +25,5 @@ public class QuestaoXadrez extends QuestaoMultiEscolha{
 
     public void setFenInicial(String fenInicial) {
         this.fenInicial = fenInicial;
-    }
-
-    @Override
-    public String getEnunciado() {
-        imprimirTabuleiroFen(fenInicial);
-        return super.getEnunciado();
     }
 }

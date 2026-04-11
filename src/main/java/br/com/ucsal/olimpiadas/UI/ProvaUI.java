@@ -1,9 +1,7 @@
 package br.com.ucsal.olimpiadas.UI;
 
-import br.com.ucsal.olimpiadas.model.Materia;
-import br.com.ucsal.olimpiadas.model.TipoQuestao;
-import br.com.ucsal.olimpiadas.repositories.MateriaRepository;
-import br.com.ucsal.olimpiadas.repositories.TipoQuestaoRepository;
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
 import br.com.ucsal.olimpiadas.service.ProvaService;
 
 import java.util.ArrayList;
@@ -13,14 +11,10 @@ import java.util.Scanner;
 public class ProvaUI implements Executavel{
 
     private ProvaService provaService;
-    private TipoQuestaoRepository tipoQuestaoRepository;
-    private MateriaRepository materiaRepository;
     private Scanner in;
 
-    public ProvaUI(ProvaService provaService, TipoQuestaoRepository tipoQuestaoRepository, MateriaRepository materiaRepository, Scanner in) {
+    public ProvaUI(ProvaService provaService, Scanner in) {
         this.provaService = provaService;
-        this.tipoQuestaoRepository = tipoQuestaoRepository;
-        this.materiaRepository = materiaRepository;
         this.in = in;
     }
 
@@ -53,7 +47,8 @@ public class ProvaUI implements Executavel{
         while (true){
             System.out.println("Escolha os tipos de questao da prova: ");
 
-            for (var tipo : tipoQuestaoRepository.getTiposDeQuestao()){
+
+            for (var tipo : TipoQuestao.values()){
                 System.out.printf("%d) %s%n", tipo.getId(), tipo.getDescricao());
             }
             System.out.println("0) Finalizar");
@@ -66,10 +61,14 @@ public class ProvaUI implements Executavel{
             }
 
             if (opcaoEscolhida==0) {
+                if (tiposEscolhidos.isEmpty()) {
+                    System.out.println("Escolha ao menos um tipo");
+                    continue;
+                }
                 return tiposEscolhidos;
             }
 
-            TipoQuestao escolhido = tipoQuestaoRepository.findById(opcaoEscolhida);
+            TipoQuestao escolhido = TipoQuestao.findById(opcaoEscolhida);
             if (escolhido == null) {
                 System.out.println("Opção inválida");
             } else if (tiposEscolhidos.contains(escolhido)) {
@@ -86,7 +85,7 @@ public class ProvaUI implements Executavel{
         while (true){
             System.out.println("Escolha as materias da prova: ");
 
-            for (var materia : materiaRepository.getMaterias()){
+            for (var materia : Materia.values()){
                 System.out.printf("%d) %s%n", materia.getId(), materia.getNome());
             }
             System.out.println("0) Finalizar");
@@ -102,7 +101,7 @@ public class ProvaUI implements Executavel{
                 return materiasEscolhidas;
             }
 
-            Materia escolhido = materiaRepository.findMateriaById(opcaoEscolhida);
+            Materia escolhido = Materia.findById(opcaoEscolhida);
             if (escolhido == null ) {
                 System.out.println("Opção inválida");
             } else if (materiasEscolhidas.contains(escolhido)) {

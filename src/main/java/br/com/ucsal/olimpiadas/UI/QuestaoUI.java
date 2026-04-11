@@ -1,9 +1,12 @@
 package br.com.ucsal.olimpiadas.UI;
 
+import br.com.ucsal.olimpiadas.ChessboardRenderer;
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
+import br.com.ucsal.olimpiadas.model.questoes.DadosQuestao;
 import br.com.ucsal.olimpiadas.model.questoes.Questao;
-import br.com.ucsal.olimpiadas.model.TipoQuestao;
-import br.com.ucsal.olimpiadas.repositories.MateriaRepository;
-import br.com.ucsal.olimpiadas.repositories.TipoQuestaoRepository;
+
+import br.com.ucsal.olimpiadas.model.questoes.QuestaoXadrez;
 import br.com.ucsal.olimpiadas.service.QuestaoService;
 
 import java.util.List;
@@ -14,15 +17,11 @@ public class QuestaoUI implements Executavel{
     private QuestaoService questaoService;
     private ProvaUI provaUI;
     private Scanner in;
-    private TipoQuestaoRepository tipoQuestaoRepository;
-    private MateriaRepository materiaRepository;
 
-    public QuestaoUI(QuestaoService questaoService, ProvaUI provaUI, Scanner in, TipoQuestaoRepository tipoQuestaoRepository, MateriaRepository materiaRepository) {
+    public QuestaoUI(QuestaoService questaoService, ProvaUI provaUI, Scanner in) {
         this.questaoService = questaoService;
         this.provaUI = provaUI;
         this.in = in;
-        this.tipoQuestaoRepository = tipoQuestaoRepository;
-        this.materiaRepository = materiaRepository;
     }
 
     public void executar() {
@@ -45,11 +44,8 @@ public class QuestaoUI implements Executavel{
        if (materiaId == null)
                 return;
 
-       if (materiaRepository.findMateriaById(materiaId).getId()==1) {
-            cadastrarQuestaoXadrez(provaId, tipoId, materiaId);
-       } else {
-           cadastrarQuestao(provaId, tipoId, materiaId);
-       }
+       cadastrarQuestao(provaId, tipoId, materiaId);
+
 
 
         System.out.println("Questão cadastrada: " + questaoService.findByProvaId(provaId).getLast().getQuestaoNaProva() + " (na prova " + provaId + ")");
@@ -59,43 +55,36 @@ public class QuestaoUI implements Executavel{
 
         var enunciado = lerEnunciado();
 
-        var materia = materiaRepository.findMateriaById(materiaId);
+        String fenInicial = null;
 
-        var tipo = tipoQuestaoRepository.findById(tipoId);
+        var materia = Materia.findById(materiaId);
 
-        var alternativas = lerAlternativas(tipo);
+        if (materia==Materia.XADREZ) {
+            fenInicial = lerFenInicial();
+        }
 
-        char altCorreta = lerAlternativaCorreta(tipo);
-
-        Character correta = validarAlternativa(altCorreta);
-
-        if (correta == null)
-            return;
-
-        questaoService.cadastrarQuestao(provaId, enunciado, alternativas, correta, tipo, materia);
-    }
-
-    private void cadastrarQuestaoXadrez(Long provaId, Long tipoId, Long materiaId) {
-
-        var fenInicial = lerFenInicial();
-
-        var enunciado = lerEnunciado();
-
-        var materia = materiaRepository.findMateriaById(materiaId);
-
-        var tipo = tipoQuestaoRepository.findById(tipoId);
+        var tipo = TipoQuestao.findById(tipoId);
 
         var alternativas = lerAlternativas(tipo);
 
-        char altCorreta = lerAlternativaCorreta(tipo);
+        char altCorreta;
 
-        Character correta = validarAlternativa(altCorreta);
+        Character correta = null;
+        boolean alternativaNaoAceita = true;
 
-        if (correta == null)
-            return;
+        while (alternativaNaoAceita) {
 
-        questaoService.cadastrarQuestao(provaId, fenInicial, enunciado, alternativas, correta, tipo, materia);
+            altCorreta = lerAlternativaCorreta(tipo);
+            correta = validarAlternativa(tipo, altCorreta);
 
+            if (correta != null)
+                alternativaNaoAceita=false;
+        }
+
+
+        DadosQuestao dados = new DadosQuestao(enunciado, alternativas, correta, tipo, materia);
+
+        questaoService.cadastrarQuestao(provaId, dados, fenInicial);
     }
 
     private Long lerTipo(Long provaId) {
@@ -128,7 +117,7 @@ public class QuestaoUI implements Executavel{
     private String[] lerAlternativas(TipoQuestao tipo) {
         String [] alternativas = null;
 
-        if (tipo.getId()==1) {
+        if (tipo==TipoQuestao.MULTIPLA_ESCOLHA) {
             alternativas = new String [5];
             for (int i = 0; i < 5; i++) {
                 char letra = (char) ('A' + i);
@@ -136,7 +125,7 @@ public class QuestaoUI implements Executavel{
                 alternativas[i] = letra + ") " + in.nextLine();
             }
 
-        } else if (tipo.getId()==2) {
+        } else if (tipo==TipoQuestao.VERDADEIRO_OU_FALSO) {
             alternativas = new String[2];
             alternativas[0] = "Verdadeiro";
             alternativas[1] = "Falso";
@@ -144,15 +133,15 @@ public class QuestaoUI implements Executavel{
         return alternativas;
     }
 
-
-
     private char lerAlternativaCorreta(TipoQuestao tipo){
 
-        if (tipo.getId()==1) {
+        if (tipo==TipoQuestao.MULTIPLA_ESCOLHA) {
             System.out.print("Alternativa correta (A–E): ");
             return in.nextLine().trim().charAt(0);
-        } else if (tipo.getId()==2) {
-            System.out.print("Alternativa correta (A (Verdadeiro) | B (Falso): ");
+        }
+
+        if (tipo==TipoQuestao.VERDADEIRO_OU_FALSO) {
+            System.out.print("Alternativa correta (V (Verdadeiro) | F (Falso): ");
             return in.nextLine().trim().charAt(0);
         } else {
             System.out.println("Tipo ainda não implementado, implementando funcionalidade padrão de multipla escolha");
@@ -161,9 +150,9 @@ public class QuestaoUI implements Executavel{
         }
     }
 
-    private Character validarAlternativa(char c) {
+    private Character validarAlternativa(TipoQuestao tipo, char c) {
         try {
-            return questaoService.validarAlternativa(c);
+            return tipo.normalizar(c);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -175,33 +164,41 @@ public class QuestaoUI implements Executavel{
         return in.nextLine();
     }
 
-    public void exibirQuestao(Questao q) {
-        System.out.println("\nQuestão #" + q.getQuestaoNaProva());
-        System.out.println(q.getEnunciado());
+    public void exibirQuestao(Questao questao) {
+        System.out.println("\nQuestão #" + questao.getQuestaoNaProva());
+        System.out.println(questao.getEnunciado());
 
-        System.out.println("Posição inicial:");
-        //imprimirTabuleiroFen(q.getFenInicial());
+        if (questao.getMateria()==Materia.XADREZ){
+            System.out.println("Posição inicial:");
+            questao.exibirMaisDetalhes();
+        }
 
-        for (var alt : q.getAlternativas()) {
+        for (var alt : questao.getAlternativas()) {
             System.out.println(alt);
         }
     }
 
-    public char lerResposta() {
-        System.out.print("Sua resposta (A–E): ");
-        return in.nextLine().trim().charAt(0);
+    public char lerResposta(TipoQuestao tipo) {
+
+        if (tipo==TipoQuestao.MULTIPLA_ESCOLHA) {
+            System.out.print("Sua resposta (A–E): ");
+            return in.nextLine().trim().charAt(0);
+        } else  {
+            System.out.print("Sua resposta (V | F): ");
+            return in.nextLine().trim().charAt(0);
+        }
+
     }
 
-    public char validarResposta(char c) {
+    public char validarResposta(TipoQuestao tipo, char c) {
         try {
-            return questaoService.validarAlternativa(c);
+            return tipo.normalizar(c);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("resposta inválida (marcando como errada)");
             return 'X';
         }
     }
-
 
     public List<Questao> procurarQuestoes(Long provaId) {
         return questaoService.findByProvaId(provaId);

@@ -1,8 +1,9 @@
 package br.com.ucsal.olimpiadas.service;
 
-import br.com.ucsal.olimpiadas.model.Materia;
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
 import br.com.ucsal.olimpiadas.model.Prova;
-import br.com.ucsal.olimpiadas.model.TipoQuestao;
+
 import br.com.ucsal.olimpiadas.repositories.ProvaRepository;
 
 import java.util.List;

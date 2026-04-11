@@ -1,31 +1,44 @@
 package br.com.ucsal.olimpiadas.model.questoes;
 
-import br.com.ucsal.olimpiadas.model.Materia;
-import br.com.ucsal.olimpiadas.model.TipoQuestao;
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
 
 import java.util.Arrays;
 
-public abstract class  Questao {
+public abstract class Questao {
 
 	private long id;
 	private long provaId;
 
-	private String enunciado;
+
+    private String enunciado;
 	private String[] alternativas;
 	private char alternativaCorreta;
     private int questaoNaProva;
     private TipoQuestao tipoQuestao;
     private Materia materia;
 
+    public Questao(long id, long provaId, String enunciado, String[] alternativas,char alternativaCorreta, int questaoNaProva, TipoQuestao tipoQuestao, Materia materia) {
+        this.id = id;
+        this.provaId = provaId;
+        this.enunciado = enunciado;
+        this.alternativas = alternativas;
+        this.alternativaCorreta = alternativaCorreta;
+        this.questaoNaProva = questaoNaProva;
+        this.tipoQuestao = tipoQuestao;
+        this.materia = materia;
+    }
+
     public boolean isRespostaCorreta(char marcada) {
         try {
-            return normalizar(marcada) == alternativaCorreta;
+            return tipoQuestao.normalizar(marcada) == alternativaCorreta;
         } catch (Exception e) {
             return false;
         }
 	}
 
-	public abstract char normalizar(char c);
+
+    public abstract void exibirMaisDetalhes();
 
     public long getId() {
         return id;
@@ -56,18 +69,21 @@ public abstract class  Questao {
     }
 
     public void setAlternativas(String[] alternativas) {
-        if (alternativas == null || alternativas.length != 5) {
-            throw new IllegalArgumentException("A questão deve possuir exatamente 5 alternativas.");
+        if (this.tipoQuestao==TipoQuestao.MULTIPLA_ESCOLHA) {
+            if (alternativas == null || alternativas.length != 5) {
+                throw new IllegalArgumentException("A questão deve possuir exatamente 5 alternativas.");
+            }
+            this.alternativas = Arrays.copyOf(alternativas, 5);
+        } if (this.tipoQuestao==TipoQuestao.VERDADEIRO_OU_FALSO) {
+            if (alternativas == null || alternativas.length != 2) {
+                throw new IllegalArgumentException("A questão deve possuir exatamente 2 alternativas.");
+            }
+            this.alternativas = Arrays.copyOf(alternativas, 2);
         }
-        this.alternativas = Arrays.copyOf(alternativas, 5);
-    }
-
-    public char getAlternativaCorreta() {
-        return alternativaCorreta;
     }
 
     public void setAlternativaCorreta(char alternativaCorreta) {
-        this.alternativaCorreta = normalizar(alternativaCorreta);
+        this.alternativaCorreta = this.tipoQuestao.normalizar(alternativaCorreta);
     }
 
     public int getQuestaoNaProva() {
@@ -78,8 +94,8 @@ public abstract class  Questao {
         this.questaoNaProva = questaoNaProva;
     }
 
-    public TipoQuestao getTipoQuestao() {
-        return tipoQuestao;
+    public char getAlternativaCorreta() {
+        return alternativaCorreta;
     }
 
     public void setTipoQuestao(TipoQuestao tipoQuestao) {
@@ -92,5 +108,9 @@ public abstract class  Questao {
 
     public void setMateria(Materia materia) {
         this.materia = materia;
+    }
+
+    public TipoQuestao getTipoQuestao() {
+        return tipoQuestao;
     }
 }

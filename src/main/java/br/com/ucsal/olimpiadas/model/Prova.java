@@ -1,5 +1,8 @@
 package br.com.ucsal.olimpiadas.model;
 
+import br.com.ucsal.olimpiadas.enums.Materia;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
+
 import java.util.List;
 
 public class Prova {
@@ -7,7 +10,7 @@ public class Prova {
 	private long id;
 	private String titulo;
 
-	private List<TipoQuestao> tiposDeQuestao;
+	private List<br.com.ucsal.olimpiadas.enums.TipoQuestao> tiposDeQuestao;
 	private List<Materia> materias;
 
     public long getId() {

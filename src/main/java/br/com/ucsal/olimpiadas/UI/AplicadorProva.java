@@ -60,9 +60,9 @@ public class AplicadorProva implements Executavel{
 
             questaoUI.exibirQuestao(questao);
 
-            Character marcada = questaoUI.lerResposta();
+            Character marcada = questaoUI.lerResposta(questao.getTipoQuestao());
 
-            marcada = questaoUI.validarResposta(marcada);
+            marcada = questaoUI.validarResposta(questao.getTipoQuestao(), marcada);
 
             tentativaService.addResposta(tentativaId, questao, marcada);
         }

@@ -2,6 +2,7 @@ package br.com.ucsal.olimpiadas;
 
 
 import br.com.ucsal.olimpiadas.UI.*;
+import br.com.ucsal.olimpiadas.enums.TipoQuestao;
 import br.com.ucsal.olimpiadas.model.*;
 import br.com.ucsal.olimpiadas.repositories.*;
 import br.com.ucsal.olimpiadas.service.*;
@@ -18,17 +19,14 @@ public class App {
     private static final ParticipanteService participanteService = new ParticipanteService(participanteRepository);
     private static final ParticipanteUI participanteUI = new ParticipanteUI(participanteService, in);
 
-    private static final TipoQuestaoRepository tipoQuestaoRepository = new TipoQuestaoRepository();
-    private static final MateriaRepository materiaRepository = new MateriaRepository();
-
     private static final ProvaRepository provaRepository = new ProvaRepository();
     private static final ProvaService provaService = new ProvaService(provaRepository);
-    private static final ProvaUI provaUI = new ProvaUI(provaService, tipoQuestaoRepository, materiaRepository, in);
+    private static final ProvaUI provaUI = new ProvaUI(provaService, in);
 
 
     private static final QuestaoRepository questaoRepository = new QuestaoRepository();
     private static final QuestaoService questaoService = new QuestaoService(questaoRepository, provaRepository);
-    private static final QuestaoUI questaoUI = new QuestaoUI(questaoService, provaUI, in,tipoQuestaoRepository, materiaRepository);
+    private static final QuestaoUI questaoUI = new QuestaoUI(questaoService, provaUI, in);
 
     private static final TentativaRepository tentativaRepository = new TentativaRepository();
     private static final TentativaService tentativaService = new TentativaService(tentativaRepository);
@@ -39,7 +37,7 @@ public class App {
     private static final Menu menu = new Menu(participanteUI, provaUI, questaoUI, aplicadorProva, tentativaUI);
 
     static void main(String[] args) {
-		DataSeeder.seed(participanteService, provaService, questaoService, tipoQuestaoRepository, materiaRepository);
+		DataSeeder.seed(participanteService, provaService, questaoService);
 
 		while (true) {
 
