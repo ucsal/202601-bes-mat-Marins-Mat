@@ -1,4 +1,4 @@
-package br.com.ucsal.olimpiadas;
+package br.com.ucsal.olimpiadas.model;
 
 public class Resposta {
 
@@ -6,7 +6,13 @@ public class Resposta {
 	private char alternativaMarcada;
 	private boolean correta;
 
-	public long getQuestaoId() {
+    public Resposta(long questaoId, char alternativaMarcada, boolean respostaCorreta) {
+        this.questaoId = questaoId;
+        this.alternativaMarcada = alternativaMarcada;
+        this.correta = respostaCorreta;
+    }
+
+    public long getQuestaoId() {
 		return questaoId;
 	}
 
